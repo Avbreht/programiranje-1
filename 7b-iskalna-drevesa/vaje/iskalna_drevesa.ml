@@ -22,7 +22,10 @@ type 'a tree =
 
 let leaf x = Node(Empty, x, Empty) 
 
-let test_tree = ()
+let test_tree = 
+  let left_t = Node(leaf 0, 2 , Empty) in
+  let right_t = Node(leaf 6, 7, leaf 11) in
+  Node(left_t, 5, right_t)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [mirror] vrne prezrcaljeno drevo. Na primeru [test_tree] torej vrne
@@ -38,7 +41,9 @@ let test_tree = ()
  Node (Empty, 2, Node (Empty, 0, Empty)))
 [*----------------------------------------------------------------------------*)
 
-let rec mirror = ()
+let rec mirror = function
+  | Empty -> Empty
+  | Node(x , y, z) -> Node(mirror z, y , mirror x)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [height] vrne višino oz. globino drevesa, funkcija [size] pa število
@@ -50,10 +55,25 @@ let rec mirror = ()
  - : int = 6
 [*----------------------------------------------------------------------------*)
 
-let rec height = ()
+let rec height = function
+ | Empty -> 0
+ | Node (l , x , r) -> 1 + max (height l) (height r) 
 
-let rec size = ()
+let rec size = function
+  | Empty -> Empty
+  | Node(l , x, r) -> 1 + (size l) + (size r)
 
+let rec tl_size tree =
+  let rec size' acc queue =
+    match queue with 
+    | [] -> acc
+    | x :: xs -> (
+      match x with
+      | Empty -> size' acc xs
+      | Node (l , t, r) -> size'(acc + 1) (l :: r :: xs)
+    )
+  in
+  size' 0 [tree]
 (*----------------------------------------------------------------------------*]
  Funkcija [follow directions tree] tipa [direction list -> 'a tree -> 'a option]
  sprejme seznam navodil za premikanje po drevesu in vrne vozlišče do katerega 
@@ -68,7 +88,14 @@ let rec size = ()
 
 type direction = Left | Right
 
-let rec follow = ()
+let rec follow sez tree =
+  match sez, tree with
+  | [] , Node (l , x , r ) -> x 
+  | t :: ts, Empty -> None
+  | t :: ts , Node(l , _ , r) -> if t = Left then follow l else follow r
+
+
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [prune directions tree] poišče vozlišče v drevesu [t] glede na 
@@ -83,7 +110,7 @@ let rec follow = ()
  Some (Node (Node (Node (Empty, 0, Empty), 2, Empty), 5, Empty))
 [*----------------------------------------------------------------------------*)
 
-let rec prune = ()
+let rec prune = 
 
 (*----------------------------------------------------------------------------*]
  Funkcija [map_tree f tree] preslika drevo [tree] v novo drevo, ki vsebuje

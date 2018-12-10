@@ -10,7 +10,17 @@
  - : int = 3
 [*----------------------------------------------------------------------------*)
 
-let rec penultimate_element = ()
+let rec penultimate_element sez = 
+  match sez with
+    | [] -> failwith "To short"
+    | glava::[] -> failwith "To short"
+    | glava::rep::[] -> glava
+    | glava::rep::rrep -> penultimate_element (rep::rrep)
+  ;;
+
+penultimate_element [1; 2; 3; 4];;
+
+
 
 (*----------------------------------------------------------------------------*]
  The function [get k list] returns the [k]-th element in the list [list].

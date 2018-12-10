@@ -69,7 +69,7 @@ def read_file_to_string(directory, filename):
 
 def page_to_ads(vsebina):
     '''Split "page" to a list of advertisement blocks.'''
-    return TODO
+    return vsebina
 
 # Definirajte funkcijo, ki sprejme niz, ki predstavlja oglas, in izlušči
 # podatke o imenu, ceni in opisu v oglasu.
